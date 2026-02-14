@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Subject Notes</title>
+    <style>
+        /* --- 1. RESET & BASE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #ee7752, #a95776, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            color: white;
+            padding-bottom: 40px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 2. APP HEADER (Sticky) --- */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .back-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.9); }
+
+        .header-title h1 { font-size: 1.2rem; font-weight: 700; margin: 0; }
+        .header-title p { font-size: 0.8rem; opacity: 0.8; margin: 0; }
+
+        /* --- 3. CONTAINER --- */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- 4. LAYOUT (Grid vs List) --- */
+        .card-grid {
+            display: grid;
+            gap: 20px;
+            /* Desktop Default: Grid */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* --- 5. CARD STYLING --- */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            
+            /* Desktop: Flex Column (Centered) */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:active { transform: scale(0.96); background: rgba(255,255,255,0.2); }
+        @media(hover: hover) {
+            .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); }
+        }
+
+        .icon-box {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .card-content h3 { font-size: 1.2rem; margin-bottom: 5px; font-weight: 600; }
+        .card-content p { font-size: 0.85rem; opacity: 0.8; }
+
+        .arrow-icon {
+            display: none; /* Hidden on Desktop Grid */
+            font-size: 1.2rem;
+            opacity: 0.6;
+        }
+
+        /* --- 6. MOBILE OPTIMIZATION ("List View") --- */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+
+            .card-grid {
+                /* Mobile: 1 Column */
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .card {
+                /* Mobile: Flex Row (Left Aligned) */
+                flex-direction: row;
+                align-items: center;
+                text-align: left;
+                padding: 15px;
+                min-height: 80px;
+            }
+
+            .icon-box {
+                font-size: 2rem;
+                margin-bottom: 0;
+                margin-right: 20px;
+                min-width: 50px;
+                text-align: center;
+            }
+
+            .card-content { flex: 1; }
+            .card-content h3 { font-size: 1.1rem; margin: 0; }
+            .card-content p { margin: 2px 0 0 0; font-size: 0.8rem; }
+
+            .arrow-icon {
+                display: block; /* Show Arrow on Mobile */
+                color: white;
+            }
+        }
+
+        /* --- 7. ANIMATIONS --- */
+        .card { animation: fadeInUp 0.6s ease-out backwards; }
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.15s; }
+        .card:nth-child(3) { animation-delay: 0.2s; }
+        .card:nth-child(4) { animation-delay: 0.25s; }
+        .card:nth-child(5) { animation-delay: 0.3s; }
+        .card:nth-child(6) { animation-delay: 0.35s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="back-btn" onclick="goBack()">
+            ➜
+            <style>.back-btn { transform: rotate(180deg); }</style>
+        </div>
+        <div class="header-title">
+            <h1>Lab Programs</h1>
+            <p>PDF Resources</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card-grid">
+            
+            <div class="card" onclick="openPdf('cpp')">
+                <div class="icon-box">💻</div>
+                <div class="card-content">
+                    <h3>C++ Lab</h3>
+                    <p>MET BKC (eng) 2025 PATTERN</p>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+             <div class="card" onclick="openPdf('py')">
+                <div class="icon-box">💻</div>
+                <div class="card-content">
+                    <h3>Python Lab</h3>
+                    <p>MET BKC (eng) 2025 PATTERN</p>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+          <div class="card" onclick="openPdf('dsa')">
+                <div class="icon-box">💻</div>
+                <div class="card-content">
+                    <h3>DSA Lab</h3>
+                    <p>MET BKC (eng) 2025 PATTERN</p>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <!--  <div class="card" onclick="openPdf('java')">
+                <div class="icon-box">☕</div>
+                <div class="card-content">
+                    <h3>Java Core</h3>
+                    <p>Complete Handbook</p>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <div class="card" onclick="openPdf('python')">
+                <div class="icon-box">🐍</div>
+                <div class="card-content">
+                    <h3>Python</h3>
+                    <p>Language Reference</p>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div> -->
+
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION: Replace with your actual paths
+        const pdfLinks = {
+            'cpp':      'lab/cppLab.pdf',
+            'py':        'lab/pythonLab.pdf',
+            'dsa':      'lab/dsaLab.pdf',
+            'java':     'notes/java_complete.pdf',
+            'python':   'notes/python_handbook.pdf',
+            'angular':  'notes/angular_tutorial.pdf'
+        };
+
+        function openPdf(subject) {
+            const url = pdfLinks[subject];
+            
+            if (url) {
+                // Add slight delay for animation visibility
+                setTimeout(() => {
+                    window.open(url, '_blank');
+                }, 150);
+            } else {
+                alert('PDF file path not configured!');
+            }
+        }
+
+        function goBack() {
+            if (document.referrer) {
+                history.back();
+            } else {
+                window.location.href = '../stdProgress.html'; // Adjust path as needed
+            }
+        }
+    </script>
+</body>
+</html>

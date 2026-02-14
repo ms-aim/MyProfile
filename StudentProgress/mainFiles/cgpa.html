@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPPU CGPA Converter</title>
+    <style>
+        /* --- 1. THEME (Matching your Glassmorphism site) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --accent-color: #99f2c8;
+            --text-color: #ffffff;
+        }
+        body {
+            background: linear-gradient(-45deg, #ee7752, #a95776, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            color: var(--text-color); padding: 20px;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* --- 2. CONVERTER PANEL --- */
+        .converter-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px; padding: 40px 25px;
+            width: 100%; max-width: 450px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); text-align: center;
+        }
+        h1 { font-size: 1.6rem; margin-bottom: 5px; color: var(--accent-color); }
+        .sub-text { opacity: 0.8; font-size: 0.85rem; margin-bottom: 25px; }
+
+        .input-group { margin-bottom: 25px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 1px; }
+        input {
+            width: 100%; background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border); border-radius: 15px;
+            padding: 15px; color: white; font-size: 1.2rem; outline: none;
+        }
+
+        /* --- 3. RESULT DISPLAY --- */
+        .result-area {
+            background: rgba(0, 0, 0, 0.2); border-radius: 20px;
+            padding: 20px; margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .percentage { font-size: 2.5rem; font-weight: bold; color: var(--accent-color); }
+        .degree-class { font-size: 0.9rem; margin-top: 5px; opacity: 0.9; font-weight: 500; }
+        .formula-info { font-size: 0.75rem; opacity: 0.6; margin-top: 10px; font-style: italic; }
+
+        .back-btn {
+            background: transparent; color: white; border: 1px solid var(--glass-border);
+            padding: 12px; border-radius: 50px; width: 100%; cursor: pointer; transition: 0.3s;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="converter-panel">
+        <h1>SPPU Converter</h1>
+        <p class="sub-text">Official Circular 332/2020 Logic</p>
+
+        <div class="input-group">
+            <label>ENTER YOUR CGPA</label>
+            <input type="number" id="cgpa-input" step="0.01" placeholder="0.00" oninput="calculateSPPU()">
+        </div>
+
+        <div class="result-area">
+            <div class="percentage" id="perc-out">0.00%</div>
+            <div class="degree-class" id="class-out">---</div>
+            <div class="formula-info" id="formula-out">Enter CGPA to see formula</div>
+        </div>
+
+        <button class="back-btn" onclick="window.history.back()">Go Back</button>
+    </div>
+
+    <script>
+        function calculateSPPU() {
+            let cgpa = parseFloat(document.getElementById('cgpa-input').value);
+            let pOut = document.getElementById('perc-out');
+            let cOut = document.getElementById('class-out');
+            let fOut = document.getElementById('formula-out');
+
+            if (isNaN(cgpa) || cgpa < 4.0 || cgpa > 10.0) {
+                pOut.innerText = "0.00%";
+                cOut.innerText = "---";
+                fOut.innerText = (cgpa > 10) ? "Max CGPA is 10.0" : "Min CGPA is 4.0";
+                return;
+            }
+
+            let percentage = 0;
+            let formula = "";
+
+            // Official SPPU CBCS Formulas (Circular 332/2020)
+            if (cgpa >= 9.5) {
+                percentage = (20 * cgpa) - 100;
+                formula = "Formula: (20 × CGPA) - 100";
+            } else if (cgpa >= 8.25) {
+                percentage = (12 * cgpa) - 25;
+                formula = "Formula: (12 × CGPA) - 25";
+            } else if (cgpa >= 6.75) {
+                percentage = (10 * cgpa) - 7.5;
+                formula = "Formula: (10 × CGPA) - 7.5";
+            } else if (cgpa >= 5.75) {
+                percentage = (5 * cgpa) + 26.25;
+                formula = "Formula: (5 × CGPA) + 26.25";
+            } else if (cgpa >= 5.25) {
+                percentage = (10 * cgpa) - 2.5;
+                formula = "Formula: (10 × CGPA) - 2.5";
+            } else if (cgpa >= 4.75) {
+                percentage = (10 * cgpa) - 2.5;
+                formula = "Formula: (10 × CGPA) - 2.5";
+            } else {
+                percentage = (6.6 * cgpa) + 13.6;
+                formula = "Formula: (6.6 × CGPA) + 13.6";
+            }
+
+            // Awarded Class Logic
+            let className = "";
+            if (cgpa >= 7.75) className = "First Class with Distinction 🎓";
+            else if (cgpa >= 6.75) className = "First Class 🥇";
+            else if (cgpa >= 6.25) className = "Higher Second Class 🥈";
+            else if (cgpa >= 5.50) className = "Second Class 🥉";
+            else className = "Pass Class ✅";
+
+            pOut.innerText = percentage.toFixed(2) + "%";
+            cOut.innerText = className;
+            fOut.innerText = formula;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Exam Paper Archive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- 1. RESET & BASE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #ee7752, #a95776, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            color: white;
+            padding-bottom: 50px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 2. APP HEADER --- */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: 0.3s;
+            transform: rotate(180deg);
+        }
+
+        .back-btn:active { background: rgba(255,255,255,0.3); transform: rotate(180deg) scale(0.9); }
+
+        .header-title h1 { font-size: 1.2rem; font-weight: 700; margin: 0; }
+        .header-title p { font-size: 0.8rem; opacity: 0.8; margin: 0; }
+
+        /* --- 3. CONTAINER --- */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- 4. SEARCH BAR --- */
+        .search-wrapper {
+            position: sticky;
+            top: 80px; 
+            z-index: 90;
+            margin-bottom: 25px;
+        }
+
+        #searchBox {
+            padding: 15px 20px;
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #searchBox::placeholder { color: rgba(255, 255, 255, 0.7); }
+
+        /* --- 5. GRID & CARDS --- */
+        .card-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Animation applied to ALL cards */
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .card.hidden { display: none !important; }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .icon-box {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.1);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .card-content h3 { font-size: 1.2rem; margin-bottom: 5px; font-weight: 600; }
+        .card-content p { font-size: 0.85rem; opacity: 0.8; margin-bottom: 20px; }
+
+        .desktop-btn {
+            padding: 8px 20px;
+            background: white;
+            color: #203a43;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .mobile-download-icon { display: none; font-size: 1.2rem; opacity: 0.8; }
+
+        /* --- 6. MOBILE OPTIMIZATION --- */
+        @media (max-width: 768px) {
+            .card-grid { grid-template-columns: 1fr; gap: 12px; }
+            .card {
+                flex-direction: row;
+                padding: 15px;
+                text-align: left;
+                justify-content: space-between;
+            }
+            .icon-box { width: 50px; height: 50px; font-size: 1.5rem; margin-bottom: 0; margin-right: 15px; }
+            .card-content { flex: 1; }
+            .card-content p { margin-bottom: 0; }
+            .desktop-btn { display: none; }
+            .mobile-download-icon { display: block; }
+        }
+
+        /* --- 7. ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="back-btn" onclick="goBack()">➜</div>
+        <div class="header-title">
+            <h1>Exam Archive</h1>
+            <p>Question Papers</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-wrapper">
+            <input type="text" id="searchBox" placeholder="🔍 Search Pattern or Year...">
+        </div>
+
+        <div class="card-grid" id="cardGrid">
+            <div class="card" onclick="downloadFile('questionss/M.C.A ( 2020 PATTERN )april2025.pdf')">
+                <div class="icon-box"><i class="fas fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>MCA APRIL 2025</h3>
+                    <p>2020 PATTERN</p>
+                    <span class="desktop-btn">Download PDF</span>
+                </div>
+                <div class="mobile-download-icon"><i class="fas fa-cloud-download-alt"></i></div>
+            </div>
+
+            <div class="card" onclick="downloadFile('questionss/M.C.A ( 2024 _PATTERN )april2025.pdf')">
+                <div class="icon-box"><i class="fas fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>MCA APRIL 2025</h3>
+                    <p>2024 PATTERN</p>
+                    <span class="desktop-btn">Download PDF</span>
+                </div>
+                <div class="mobile-download-icon"><i class="fas fa-cloud-download-alt"></i></div>
+            </div>
+
+            <div class="card" onclick="downloadFile('questionss/mca1.pdf')">
+                <div class="icon-box"><i class="fas fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>MCA(Engineering)</h3>
+                    <p>2019 PATTERN</p>
+                    <span class="desktop-btn">Download PDF</span>
+                </div>
+                <div class="mobile-download-icon"><i class="fas fa-cloud-download-alt"></i></div>
+            </div>
+
+            <div class="card" onclick="downloadFile('questionss/mcaEng1.pdf')">
+                <div class="icon-box"><i class="fas fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>MCA (Engineering)-1</h3>
+                    <p>2019 PATTERN</p>
+                    <span class="desktop-btn">Download PDF</span>
+                </div>
+                <div class="mobile-download-icon"><i class="fas fa-cloud-download-alt"></i></div>
+            </div>
+
+            <div class="card" onclick="downloadFile('questionss/dsaOct2023.pdf')">
+                <div class="icon-box"><i class="fas fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>DSA</h3>
+                    <p>2020 PATTERN (Oct 2023)</p>
+                    <span class="desktop-btn">Download PDF</span>
+                </div>
+                <div class="mobile-download-icon"><i class="fas fa-cloud-download-alt"></i></div>
+            </div>
+
+            <div class="card" onclick="downloadFile('questionss/dsaApr2024.pdf')">
+                <div class="icon-box"><i class="fas fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>DSA</h3>
+                    <p>2020 PATTERN (Apr 2024)</p>
+                    <span class="desktop-btn">Download PDF</span>
+                </div>
+                <div class="mobile-download-icon"><i class="fas fa-cloud-download-alt"></i></div>
+            </div>
+            
+            <div class="card" onclick="downloadFile('questionss/MFCA.pdf')">
+                <div class="icon-box"><i class="fas fa-file-pdf"></i></div>
+                <div class="card-content">
+                    <h3>Mathematical Foundation</h3>
+                    <p>Question Bank for 2025</p>
+                    <span class="desktop-btn">Download PDF</span>
+                </div>
+                <div class="mobile-download-icon"><i class="fas fa-cloud-download-alt"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Assign Dynamic Animation Delays on Load
+        function applyAnimationDelays() {
+            const cards = document.querySelectorAll('.card:not(.hidden)');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${(index + 1) * 0.1}s`;
+            });
+        }
+
+        // Initialize delays on first load
+        window.onload = applyAnimationDelays;
+
+        // 2. Navigation Logic
+        function goBack() {
+            if (document.referrer) {
+                history.back();
+            } else {
+                window.location.href = '../StdProgress.html';
+            }
+        }
+
+        // 3. Download Logic
+        function downloadFile(url) {
+            window.open(url, '_blank');
+        }
+
+        // 4. Search Logic
+        document.getElementById('searchBox').addEventListener('input', function(event) {
+            const query = event.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+
+                if (title.includes(query) || desc.includes(query)) {
+                    card.classList.remove('hidden');
+                    // Reset animation to play again when filtered
+                    card.style.animation = 'none';
+                    card.offsetHeight; // trigger reflow
+                    card.style.animation = null;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Recalculate delays for visible cards only
+            applyAnimationDelays();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+:root {
+    --sidebar-bg: #1e293b;   /* Slate Dark */
+    --main-bg: #f8fafc;      /* Very Light Grey */
+    --accent: #3b82f6;       /* Bright Blue */
+    --text-light: #94a3b8;   /* Muted Grey for Sidebar */
+    --text-dark: #334155;    /* Dark Blue-Grey for Main */
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    height: 100vh; /* Forces single screen height */
+    overflow: hidden; /* Prevents scrollbars */
+    background-color: var(--sidebar-bg);
+}
+
+/* MAIN LAYOUT GRID */
+.resume-container {
+    display: grid;
+    grid-template-columns: 320px 1fr; /* Fixed Sidebar, Flexible Main */
+    height: 100%;
+}
+
+/* ================= SIDEBAR STYLES ================= */
+.sidebar {
+    background-color: var(--sidebar-bg);
+    color: var(--white);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Spreads content evenly vertical */
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.avatar-circle {
+    width: 60px; height: 60px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.sidebar h2 { font-size: 1.4rem; margin-bottom: 0.2rem; }
+.role { color: var(--accent); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+.contact-mini a, .contact-mini p {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.8rem;
+    text-decoration: none;
+    margin-bottom: 0.3rem;
+}
+
+.sidebar-section h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-light);
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 0.3rem;
+}
+
+/* Skill Tags */
+.skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.skill-tags span {
+    background: rgba(255,255,255,0.1);
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+/* Education & Certs */
+.timeline-item { margin-bottom: 1rem; }
+.timeline-item .year { font-size: 0.7rem; color: var(--accent); display: block; }
+.timeline-item h4 { font-size: 0.9rem; font-weight: 600; }
+.timeline-item p { font-size: 0.8rem; color: var(--text-light); }
+
+.cert-list { list-style: none; }
+.cert-list li {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    color: #e2e8f0;
+}
+.cert-list li span { color: var(--text-light); font-size: 0.7rem; float: right; }
+
+.social-links { margin-top: 1rem; }
+.social-links a {
+    color: var(--white);
+    font-size: 0.8rem;
+    margin-right: 1rem;
+    text-decoration: underline;
+    opacity: 0.7;
+}
+
+/* ================= MAIN CONTENT STYLES ================= */
+.main-content {
+    background-color: var(--main-bg);
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content vertically */
+}
+
+.main-header { margin-bottom: 3rem; }
+.main-header h1 {
+    font-size: 3rem;
+    line-height: 1.1;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.summary {
+    max-width: 600px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.btn-download {
+    display: inline-block;
+    background: var(--text-dark);
+    color: white;
+    padding: 10px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+.btn-download:hover { background: var(--accent); }
+
+/* Projects Grid */
+.section-label {
+    font-size: 0.8rem; color: var(--text-dark);
+    letter-spacing: 1px; margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.project-card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    border: 1px solid #e2e8f0;
+}
+.project-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+
+.card-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;
+}
+.card-header h4 { font-size: 1.1rem; color: var(--text-dark); }
+.tag { font-size: 0.7rem; color: var(--accent); font-weight: 700; background: #e0f2fe; padding: 3px 8px; border-radius: 10px; }
+
+.project-card p {
+    font-size: 0.85rem; color: #64748b; line-height: 1.5; margin-bottom: 1rem;
+}
+
+.tech-row small {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    margin-right: 5px;
+}
+
+/* RESPONSIVE: Stack on mobile */
+@media (max-width: 900px) {
+    body { overflow: auto; height: auto; }
+    .resume-container { grid-template-columns: 1fr; }
+    .sidebar { padding: 2rem; }
+    .main-content { padding: 2rem; }
+    .main-header h1 { font-size: 2rem; }
+    .project-grid { grid-template-columns: 1fr; }
+}
+/* ACTION CENTER STYLES */
+.cta-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+/* Primary Button (Download CV) */
+.btn-primary {
+    display: inline-block;
+    background-color: var(--text-dark);
+    color: var(--white);
+    padding: 10px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid var(--text-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* Secondary Button (Social Links) */
+.btn-secondary {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--text-dark);
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #cbd5e1; /* Light grey border */
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background-color: #f0f9ff; /* Very light blue tint on hover */
+    transform: translateY(-2px);
+}
